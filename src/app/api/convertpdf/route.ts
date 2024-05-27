@@ -35,6 +35,9 @@ export async function POST(req: NextRequest) {
       status: 201,
       headers: {
         "Content-Type": "application/pdf",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type",
       },
     });
   } catch (error) {
