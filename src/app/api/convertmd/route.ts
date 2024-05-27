@@ -4,8 +4,7 @@ import os from "os";
 import path from "path";
 
 export async function POST(req: NextRequest) {
-  const data = await req.json();
-  const mdText = data.mdText;
+  const mdText = await req.text();
 
   const tmpdir = os.tmpdir();
   fs.writeFileSync(path.join(tmpdir, "new.md"), mdText);
