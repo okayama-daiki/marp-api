@@ -7,10 +7,15 @@ import { execa } from "execa";
 export async function POST(req: NextRequest) {
   const mdText = await req.text();
 
-  const tmpdir = os.tmpdir();
-  fs.writeFileSync(path.join(tmpdir, "new.md"), mdText);
+  let message = "";
 
-  let message = undefined;
+  const tmpdir = os.tmpdir();
+  try {
+    fs.writeFileSync(path.join(tmpdir, "new.md"), mdText);
+  } catch (error) {
+    message += error + "\n";
+  }
+
   try {
     await execa(
       "npx",
@@ -25,7 +30,7 @@ export async function POST(req: NextRequest) {
       { timeout: 5000 }
     );
   } catch (error) {
-    message = error;
+    message += error;
   }
 
   try {
@@ -41,17 +46,15 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    return new NextResponse(
-      JSON.stringify({ error: error, message: message }),
-      {
-        status: 501,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
-      }
-    );
+    message += error;
+    return new NextResponse(JSON.stringify({ message: message }), {
+      status: 501,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
   }
 }
