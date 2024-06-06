@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         "-o",
         path.join(tmpdir, "new.pdf"),
       ],
-      { timeout: 1000 }
+      { timeout: 5000 }
     );
   } catch (error) {
     message += error;

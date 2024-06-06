@@ -18,6 +18,23 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await execa(
+      "npx",
+      [
+        "@marp-team/marp-cli",
+        "--html",
+        "--pdf",
+        path.join(tmpdir, "new.md"),
+        "-o",
+        path.join(tmpdir, "new.pdf"),
+      ],
+      { timeout: 5000 }
+    );
+  } catch (error) {
+    message += error;
+  }
+
+  try {
     // const mdBuffer = fs.readFileSync(path.join(tmpdir, "new.md"));
     // return new NextResponse(mdBuffer, {
     //   status: 201,
