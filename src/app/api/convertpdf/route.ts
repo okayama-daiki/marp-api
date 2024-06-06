@@ -11,13 +11,19 @@ export async function POST(req: NextRequest) {
 
   mdText = data.mdText;
 
-  let message = "";
-
   const tmpdir = os.tmpdir();
   try {
     fs.writeFileSync(path.join(tmpdir, "new.md"), mdText);
   } catch (error) {
-    message += error + "\n";
+    return new NextResponse(JSON.stringify({ error: error }), {
+      status: 501,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
   }
 
   try {
@@ -36,7 +42,15 @@ export async function POST(req: NextRequest) {
       { timeout: 1000 }
     );
   } catch (error) {
-    message += error;
+    return new NextResponse(JSON.stringify({ error: error }), {
+      status: 502,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
   }
 
   try {
@@ -51,9 +65,8 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    message += error;
-    return new NextResponse(JSON.stringify({ message: message }), {
-      status: 501,
+    return new NextResponse(JSON.stringify({ error: error }), {
+      status: 503,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
