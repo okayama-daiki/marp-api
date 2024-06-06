@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
     // "Access-Control-Allow-Headers": "Content-Type, Authorization",
     //   },
     // });
-    const ls = execa`tree -L 3`;
-    return new NextResponse(JSON.stringify({ ls: ls }), {
+    const tree = await execa`tree -L 3`;
+    return new NextResponse(JSON.stringify({ tree: tree }), {
       status: 201,
       headers: {
         "Content-Type": "text/markdown",
