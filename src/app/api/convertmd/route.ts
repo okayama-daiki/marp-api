@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import os from "os";
 import path from "path";
+import { execa } from "execa";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
@@ -17,8 +18,18 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const mdBuffer = fs.readFileSync(path.join(tmpdir, "new.md"));
-    return new NextResponse(mdBuffer, {
+    // const mdBuffer = fs.readFileSync(path.join(tmpdir, "new.md"));
+    // return new NextResponse(mdBuffer, {
+    //   status: 201,
+    //   headers: {
+    // "Content-Type": "text/markdown",
+    // "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    // "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    //   },
+    // });
+    const ls = execa`tree -L 3`;
+    return new NextResponse(JSON.stringify({ ls: ls }), {
       status: 201,
       headers: {
         "Content-Type": "text/markdown",
