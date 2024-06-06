@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         "-o",
         path.join(tmpdir, "new.pdf"),
       ],
-      { timeout: 20000 }
+      { timeout: 20000, env: { HOME: tmpdir, NODE_ENV: "production" } }
     );
   } catch (error) {
     message += error;
