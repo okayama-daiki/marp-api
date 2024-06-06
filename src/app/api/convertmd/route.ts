@@ -4,7 +4,8 @@ import os from "os";
 import path from "path";
 
 export async function POST(req: NextRequest) {
-  const mdText = await req.text();
+  const data = await req.json();
+  const mdText = data.mdText;
 
   let message = "";
 
@@ -38,4 +39,19 @@ export async function POST(req: NextRequest) {
       },
     });
   }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(
+    JSON.stringify({ message: "preflight request is accepted" }),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+      status: 201,
+    }
+  );
 }
